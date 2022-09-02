@@ -1,0 +1,58 @@
+import RPi.GPIO as GPIO
+import time
+import picamera
+import datetime  # new
+
+save_directory = "/home/pi/Documents/video"
+
+def get_file_name():  # new
+    return datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
+#GPIO.setwarnings(False)
+sensor = 4
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(sensor, GPIO.IN, GPIO.PUD_DOWN)
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(27, GPIO.OUT)
+
+previous_state = False
+
+current_state = False
+
+cam = picamera.PiCamera()
+
+while True:
+
+    time.sleep(0.1)
+
+    previous_state = current_state
+    current_state = GPIO.input(sensor)
+    if current_state != previous_state:
+        if current_state:
+            new_state = "HIGH"
+        else:
+            new_state = "LOW"
+
+        print("GPIO pin %s is %s" % (sensor, new_state))
+
+        if current_state:
+            fileName = "%s%s" % (save_directory, get_file_name())
+            print("Start recording a video")
+            cam.start_preview()
+            cam.rotation = 180
+            cam.shutter_speed = 2000
+            cam.resolution = (640, 480)
+            cam.start_recording(fileName)
+            GPIO.output(17, GPIO.HIGH)
+            time.sleep(10)
+            GPIO.output(17, GPIO.LOW)
+            
+        else:
+            print("Stop recording a video")
+            cam.stop_preview()
+            cam.stop_recording()
+            GPIO.output(27, GPIO.HIGH)
+            time.sleep(10)
+            GPIO.output(27, GPIO.LOW)
+            
+#except KeyboardInterrupt:
+GPIO.cleanup()
