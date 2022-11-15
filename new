@@ -1,0 +1,61 @@
+import RPi.GPIO as GPIO
+import time
+import picamera
+import datetime  # new
+
+save_directory = "/home/pi/Documents/ftp/Camera163/klicek_balici_linka/klic"
+
+def get_file_name():  # new
+    return datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
+GPIO.setwarnings(False)
+sensor = 4
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(sensor, GPIO.IN, GPIO.PUD_DOWN)
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(27, GPIO.OUT)
+
+previous_state = False
+
+current_state = False
+
+cam = picamera.PiCamera()
+
+while True:
+
+    time.sleep(0.1)
+
+    previous_state = current_state
+    current_state = GPIO.input(sensor)
+    if current_state != previous_state:
+        if current_state:
+            new_state = "HIGH"
+        else:
+            new_state = "LOW"
+
+        print("GPIO pin %s is %s" % (sensor, new_state))
+
+        if current_state:
+            fileName = "%s%s" % (save_directory, get_file_name())
+            print("Start recording a video")
+            cam.rotation = 180
+            cam.shutter_speed = 2000
+            cam.resolution = (640, 480)
+            cam.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cam.start_recording(fileName)
+            
+            #start = datetime.datetime.now()
+                #while (datetime.datetime.now() - start).seconds < 30:
+            cam.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            GPIO.output(27, GPIO.LOW)
+            GPIO.output(17, GPIO.HIGH)
+            
+        else:
+            print("Stop recording a video")
+            cam.stop_recording()
+            GPIO.output(17, GPIO.LOW)
+            GPIO.output(27, GPIO.HIGH)
+            
+            
+#except Keyboar2424gregefdInterrupt:
+GPIO.cleanup()
