@@ -1,11 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 import picamera
-import datetime  # new
+import datetime  
 
 save_directory = "/home/pi/Documents/ftp/Camera163/klicek_balici_linka/klic"
 
-def get_file_name():  # new
+def get_file_name():  
     return datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
 GPIO.setwarnings(False)
 sensor = 4
