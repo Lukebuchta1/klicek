@@ -56,6 +56,4 @@ while True:
             GPIO.output(17, GPIO.LOW)
             GPIO.output(27, GPIO.HIGH)
             
-            
-#except Keyboar2424gregefdInterrupt:
 GPIO.cleanup()
