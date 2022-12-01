@@ -43,9 +43,9 @@ while True:
             cam.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cam.start_recording(fileName)
             
-            #start = datetime.datetime.now()
-                #while (datetime.datetime.now() - start).seconds < 30:
-            cam.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            start = datetime.datetime.now()
+                while (datetime.datetime.now() - start).seconds < 30:
+                cam.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
             GPIO.output(27, GPIO.LOW)
             GPIO.output(17, GPIO.HIGH)
