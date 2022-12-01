@@ -3,7 +3,7 @@ import time
 import picamera
 import datetime  
 
-save_directory = "/home/pi/Documents/ftp/Camera163/klicek_balici_linka/klic"
+save_directory = "/home/pi/Documents/video"
 
 def get_file_name():  
     return datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
